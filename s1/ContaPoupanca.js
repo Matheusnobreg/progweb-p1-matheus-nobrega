@@ -7,10 +7,13 @@ export class ContaPoupanca extends Conta {
     this.taxaMensal = taxaMensal;
   }
 
-  // comportamento que só a poupança tem
   render() {
     const rendimento = this.saldo * this.taxaMensal;
-    if (rendimento > 0) this.depositar(rendimento); // usa a interface pública da mãe
+    if (rendimento > 0) this.depositar(rendimento);
     return rendimento;
+  }
+
+  tarifaMensal() {
+    return 0;
   }
 }

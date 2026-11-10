@@ -1,9 +1,12 @@
-// s1/Conta.js — v3: pronta para herança
+// s1/Conta.js — v4: abstrata e com tarifa
 export class Conta {
   #saldo = 0;
   #titular;
 
   constructor(numero, titular) {
+    if (new.target === Conta) {
+      throw new Error("Conta é abstrata: crie ContaCorrente ou ContaPoupanca");
+    }
     this.numero = numero;
     this.titular = titular;
   }
@@ -23,7 +26,6 @@ export class Conta {
     this.#titular = nome.trim();
   }
 
-  // (novo) quanto dá para sacar agora? As subclasses podem redefinir.
   saldoDisponivel() {
     return this.#saldo;
   }
@@ -35,7 +37,17 @@ export class Conta {
 
   sacar(valor) {
     if (!(valor > 0)) throw new Error("Saque deve ser positivo");
-    if (valor > this.saldoDisponivel()) throw new Error("Saldo insuficiente"); // ← mudou
+    if (valor > this.saldoDisponivel()) throw new Error("Saldo insuficiente");
     this.#saldo -= valor;
+  }
+
+  // "método abstrato": cada tipo de conta TEM de dizer quanto cobra
+  tarifaMensal() {
+    throw new Error("tarifaMensal() precisa ser implementado na subclasse");
+  }
+
+  // sobrescrevendo um método que veio de Object.prototype
+  toString() {
+    return `${this.constructor.name} ${this.numero} · ${this.titular} · R$ ${this.saldo.toFixed(2)}`;
   }
 }
